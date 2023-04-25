@@ -451,17 +451,17 @@ setCurrentTeam()
             <button v-if="!state.showPickOption" class="hover:underline" @click="toggleResults">Back to the Draft
             </button>
           </div>
-          <div class="flex flex flex-1 text-lg">
-            <div class="pr-4">
-              <div v-for="(result, index) in state.picks.slice(0,16)" class="grid grid-cols-12">
-                <div class="w-8 col-span-1 py-1">{{ index+1 }}</div>
-                <div v-if="state.picks[index]" class="col-span-2 py-1">{{ state.picks[index].team }}</div>
-                <div v-if="result" class="col-span-2 py-1">{{ result.result.position }}</div>
-                <div v-if="result" class="col-span-5 py-1">
-                  {{ result.result.name }}
+          <div class="lg:flex flex-1 text-lg">
+            <div class="lg:pr-4">
+              <div v-for="pick in state.picks.slice(0,16)" class="grid grid-cols-12">
+                <div class="w-8 col-span-1 py-1">{{ pick.pickNumber }}</div>
+                <div class="col-span-2 py-1">{{ pick.team }}</div>
+                <div v-if="pick" class="col-span-2 py-1">{{ pick.result.position }}</div>
+                <div v-if="pick" class="col-span-5 py-1">
+                  {{ pick.result.name }}
                 </div>
                 <div v-if="result" class="col-span-2 py-1">
-                {{ result.result.school}}
+                  {{ pick.result.school}}
                 </div>
               </div>
             </div>
@@ -469,12 +469,12 @@ setCurrentTeam()
               <div v-for="pick in state.picks.slice(16,31)" class="grid grid-cols-12">
                 <div class="w-8 col-span-1 py-1">{{ pick.pickNumber }}</div>
                 <div class="col-span-2 py-1">{{ pick.team }}</div>
-                <div v-if="result" class="col-span-2 py-1">{{ result.result.position }}</div>
-                <div v-if="result" class="col-span-5 py-1">
-                  {{ result.result.name }}
+                <div v-if="pick.result" class="col-span-2 py-1">{{ pick.result.position }}</div>
+                <div v-if="pick.result" class="col-span-5 py-1">
+                  {{ pick.result.name }}
                 </div>
                 <div v-if="result" class="col-span-2 py-1">
-                  {{ result.result.school}}
+                  {{ pick.result.school}}
                 </div>
               </div>
             </div>
