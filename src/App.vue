@@ -32,7 +32,6 @@ function toggleResults() {
 function reset() {
   state.showPickOption = true
   state.showTradeOption = true
-  state.showResults = false
   state.filteredPlayerOptions = []
   state.playerInput = ''
   state.tradePicks = []
