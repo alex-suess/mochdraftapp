@@ -63,11 +63,23 @@ function hidePlayerOptions() {
 }
 
 function submitPick(playerId) {
-  if (state.results[state.currentPick]) {
-    state.playerOptions.push(state.results[state.currentPick])
-  }
-  state.results[state.currentPick] = state.playerOptions.filter(player => player.id === playerId)[0]
+  console.log(state.currentPick)
+  const currentPick = state.picks.filter(pick => pick.id === state.currentPick)[0]
 
+  if (currentPick && currentPick.result) {
+    //state.playerOptions.push(state.results[state.currentPick])
+  }
+  const pickedPlayer = state.playerOptions.filter(player => player.id === playerId)[0]
+
+  state.picks = state.picks.map(pick => {
+    if (pick.pickNumber === state.currentPick) {
+      return {...pick, result: pickedPlayer};
+    }
+    return pick;
+  })
+
+  console.log(state.picks)
+  console.log(pickedPlayer)
   removePlayerFromOptions(playerId)
   hidePlayerOptions()
   if (state.currentPick === state.picks.length) {
@@ -91,14 +103,12 @@ function tradePicks() {
     })
   })
 
-
   state.picks = state.picks.map(pick => {
     if (pick.pickNumber === state.currentPick) {
       return {...pick, team: state.tradeTeam};
     }
     return pick;
   })
-
   setCurrentTeam()
   reset()
 }
@@ -218,37 +228,37 @@ const state = reactive({
     {'id': 100, 'name': 'Jaquelin Roy', 'school': 'LSU', 'year': 'Jr', 'position': 'DL'},
   ],
   picks: [
-    {'pickNumber': 1, 'team': 'CAR'},
-    {'pickNumber': 2, 'team': 'HOU'},
-    {'pickNumber': 3, 'team': 'ARI'},
-    {'pickNumber': 4, 'team': 'IND'},
-    {'pickNumber': 5, 'team': 'SEA'},
-    {'pickNumber': 6, 'team': 'DET'},
-    {'pickNumber': 7, 'team': 'LV'},
-    {'pickNumber': 8, 'team': 'ATL'},
-    {'pickNumber': 9, 'team': 'CHI'},
-    {'pickNumber': 10, 'team': 'PHI'},
-    {'pickNumber': 11, 'team': 'TEN'},
-    {'pickNumber': 12, 'team': 'HOU'},
-    {'pickNumber': 13, 'team': 'GB'},
-    {'pickNumber': 14, 'team': 'NE'},
-    {'pickNumber': 15, 'team': 'NYJ'},
-    {'pickNumber': 16, 'team': 'WAS'},
-    {'pickNumber': 17, 'team': 'PIT'},
-    {'pickNumber': 18, 'team': 'DET'},
-    {'pickNumber': 19, 'team': 'TB'},
-    {'pickNumber': 20, 'team': 'SEA'},
-    {'pickNumber': 21, 'team': 'LAC'},
-    {'pickNumber': 22, 'team': 'BAL'},
-    {'pickNumber': 23, 'team': 'MIN'},
-    {'pickNumber': 24, 'team': 'JAX'},
-    {'pickNumber': 25, 'team': 'NYG'},
-    {'pickNumber': 26, 'team': 'DAL'},
-    {'pickNumber': 27, 'team': 'BUF'},
-    {'pickNumber': 28, 'team': 'CIN'},
-    {'pickNumber': 29, 'team': 'NO'},
-    {'pickNumber': 30, 'team': 'PHI'},
-    {'pickNumber': 31, 'team': 'KC'}
+    {'pickNumber': 1, 'team': 'CAR', 'result': ''},
+    {'pickNumber': 2, 'team': 'HOU', 'result': ''},
+    {'pickNumber': 3, 'team': 'ARI', 'result': ''},
+    {'pickNumber': 4, 'team': 'IND', 'result': ''},
+    {'pickNumber': 5, 'team': 'SEA', 'result': ''},
+    {'pickNumber': 6, 'team': 'DET', 'result': ''},
+    {'pickNumber': 7, 'team': 'LV', 'result': ''},
+    {'pickNumber': 8, 'team': 'ATL', 'result': ''},
+    {'pickNumber': 9, 'team': 'CHI', 'result': ''},
+    {'pickNumber': 10, 'team': 'PHI', 'result': ''},
+    {'pickNumber': 11, 'team': 'TEN', 'result': ''},
+    {'pickNumber': 12, 'team': 'HOU', 'result': ''},
+    {'pickNumber': 13, 'team': 'GB', 'result': ''},
+    {'pickNumber': 14, 'team': 'NE', 'result': ''},
+    {'pickNumber': 15, 'team': 'NYJ', 'result': ''},
+    {'pickNumber': 16, 'team': 'WAS', 'result': ''},
+    {'pickNumber': 17, 'team': 'PIT', 'result': ''},
+    {'pickNumber': 18, 'team': 'DET', 'result': ''},
+    {'pickNumber': 19, 'team': 'TB', 'result': ''},
+    {'pickNumber': 20, 'team': 'SEA', 'result': ''},
+    {'pickNumber': 21, 'team': 'LAC', 'result': ''},
+    {'pickNumber': 22, 'team': 'BAL', 'result': ''},
+    {'pickNumber': 23, 'team': 'MIN', 'result': ''},
+    {'pickNumber': 24, 'team': 'JAX', 'result': ''},
+    {'pickNumber': 25, 'team': 'NYG', 'result': ''},
+    {'pickNumber': 26, 'team': 'DAL', 'result': ''},
+    {'pickNumber': 27, 'team': 'BUF', 'result': ''},
+    {'pickNumber': 28, 'team': 'CIN', 'result': ''},
+    {'pickNumber': 29, 'team': 'NO', 'result': ''},
+    {'pickNumber': 30, 'team': 'PHI', 'result': ''},
+    {'pickNumber': 31, 'team': 'KC', 'result': ''}
   ],
   results: {
     1: null,
@@ -441,12 +451,12 @@ setCurrentTeam()
           </div>
           <div class="flex flex-col flex-1 text-lg">
             <div>
-              <div v-for="(result, index) in state.results" class="grid grid-cols-8">
-                <div class="w-8 col-span-1">{{ index }}</div>
-                <div v-if="state.picks[index-1]" class="col-span-2">{{ state.picks[index - 1].team }}</div>
+              <div v-for="(result, index) in state.picks" class="grid grid-cols-8">
+                <div class="w-8 col-span-1">{{ index+1 }}</div>
+                <div v-if="state.picks[index]" class="col-span-2">{{ state.picks[index].team }}</div>
                 <div v-if="result" class="col-span-1">{{ result.position }}</div>
                 <div v-if="result" class="col-span-4">
-                  {{ result.name }}
+                  {{ result.result.name }}
                 </div>
               </div>
             </div>
