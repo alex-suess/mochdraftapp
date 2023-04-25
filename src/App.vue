@@ -43,8 +43,13 @@ function reset() {
 function displayPlayerOptions() {
   state.showPickOption = true
   state.showTradeOption = false
+  console.log(state.playerOptions)
   // filtered by input, then sorted by id (later adp), then take the first 5 elements
-  state.filteredPlayerOptions = state.playerOptions.filter(player => player.name.toUpperCase().includes(state.playerInput.toUpperCase())).sort((a, b) => a.id - b.id)
+  state.filteredPlayerOptions = state.playerOptions.filter(function(player) {
+    if (player && player.name) {
+      return player.name.toUpperCase().includes(state.playerInput.toUpperCase())
+    }
+  }).sort((a, b) => a.id - b.id)
 }
 
 function displayTradeTeamOptions() {
@@ -63,11 +68,9 @@ function hidePlayerOptions() {
 }
 
 function submitPick(playerId) {
-  console.log(state.currentPick)
-  const currentPick = state.picks.filter(pick => pick.id === state.currentPick)[0]
-
+  const currentPick = state.picks.filter(pick => pick.pickNumber === state.currentPick)[0]
   if (currentPick && currentPick.result) {
-    //state.playerOptions.push(state.results[state.currentPick])
+    state.playerOptions.push(currentPick.result)
   }
   const pickedPlayer = state.playerOptions.filter(player => player.id === playerId)[0]
 
@@ -78,9 +81,9 @@ function submitPick(playerId) {
     return pick;
   })
 
-  console.log(state.picks)
-  console.log(pickedPlayer)
+  console.log(state.playerOptions)
   removePlayerFromOptions(playerId)
+
   hidePlayerOptions()
   if (state.currentPick === state.picks.length) {
     toggleResults()
@@ -225,40 +228,39 @@ const state = reactive({
     {'id': 97, 'name': 'Parker Washington', 'school': 'Penn State', 'year': 'Soph', 'position': 'WR'},
     {'id': 98, 'name': 'Tucker Kraft', 'school': 'S. Dakota St.', 'year': 'Jr', 'position': 'TE'},
     {'id': 99, 'name': 'Nathaniel Dell', 'school': 'Houston', 'year': 'Jr', 'position': 'WR'},
-    {'id': 100, 'name': 'Jaquelin Roy', 'school': 'LSU', 'year': 'Jr', 'position': 'DL'},
   ],
   picks: [
-    {'pickNumber': 1, 'team': 'CAR', 'result': ''},
-    {'pickNumber': 2, 'team': 'HOU', 'result': ''},
-    {'pickNumber': 3, 'team': 'ARI', 'result': ''},
-    {'pickNumber': 4, 'team': 'IND', 'result': ''},
-    {'pickNumber': 5, 'team': 'SEA', 'result': ''},
-    {'pickNumber': 6, 'team': 'DET', 'result': ''},
-    {'pickNumber': 7, 'team': 'LV', 'result': ''},
-    {'pickNumber': 8, 'team': 'ATL', 'result': ''},
-    {'pickNumber': 9, 'team': 'CHI', 'result': ''},
-    {'pickNumber': 10, 'team': 'PHI', 'result': ''},
-    {'pickNumber': 11, 'team': 'TEN', 'result': ''},
-    {'pickNumber': 12, 'team': 'HOU', 'result': ''},
-    {'pickNumber': 13, 'team': 'GB', 'result': ''},
-    {'pickNumber': 14, 'team': 'NE', 'result': ''},
-    {'pickNumber': 15, 'team': 'NYJ', 'result': ''},
-    {'pickNumber': 16, 'team': 'WAS', 'result': ''},
-    {'pickNumber': 17, 'team': 'PIT', 'result': ''},
-    {'pickNumber': 18, 'team': 'DET', 'result': ''},
-    {'pickNumber': 19, 'team': 'TB', 'result': ''},
-    {'pickNumber': 20, 'team': 'SEA', 'result': ''},
-    {'pickNumber': 21, 'team': 'LAC', 'result': ''},
-    {'pickNumber': 22, 'team': 'BAL', 'result': ''},
-    {'pickNumber': 23, 'team': 'MIN', 'result': ''},
-    {'pickNumber': 24, 'team': 'JAX', 'result': ''},
-    {'pickNumber': 25, 'team': 'NYG', 'result': ''},
-    {'pickNumber': 26, 'team': 'DAL', 'result': ''},
-    {'pickNumber': 27, 'team': 'BUF', 'result': ''},
-    {'pickNumber': 28, 'team': 'CIN', 'result': ''},
-    {'pickNumber': 29, 'team': 'NO', 'result': ''},
-    {'pickNumber': 30, 'team': 'PHI', 'result': ''},
-    {'pickNumber': 31, 'team': 'KC', 'result': ''}
+    {'pickNumber': 1, 'team': 'CAR', 'result': {}},
+    {'pickNumber': 2, 'team': 'HOU', 'result': {}},
+    {'pickNumber': 3, 'team': 'ARI', 'result': {}},
+    {'pickNumber': 4, 'team': 'IND', 'result': {}},
+    {'pickNumber': 5, 'team': 'SEA', 'result': {}},
+    {'pickNumber': 6, 'team': 'DET', 'result': {}},
+    {'pickNumber': 7, 'team': 'LV', 'result': {}},
+    {'pickNumber': 8, 'team': 'ATL', 'result': {}},
+    {'pickNumber': 9, 'team': 'CHI', 'result': {}},
+    {'pickNumber': 10, 'team': 'PHI', 'result': {}},
+    {'pickNumber': 11, 'team': 'TEN', 'result': {}},
+    {'pickNumber': 12, 'team': 'HOU', 'result': {}},
+    {'pickNumber': 13, 'team': 'GB', 'result': {}},
+    {'pickNumber': 14, 'team': 'NE', 'result': {}},
+    {'pickNumber': 15, 'team': 'NYJ', 'result': {}},
+    {'pickNumber': 16, 'team': 'WAS', 'result': {}},
+    {'pickNumber': 17, 'team': 'PIT', 'result': {}},
+    {'pickNumber': 18, 'team': 'DET', 'result': {}},
+    {'pickNumber': 19, 'team': 'TB', 'result': {}},
+    {'pickNumber': 20, 'team': 'SEA', 'result': {}},
+    {'pickNumber': 21, 'team': 'LAC', 'result': {}},
+    {'pickNumber': 22, 'team': 'BAL', 'result': {}},
+    {'pickNumber': 23, 'team': 'MIN', 'result': {}},
+    {'pickNumber': 24, 'team': 'JAX', 'result': {}},
+    {'pickNumber': 25, 'team': 'NYG', 'result': {}},
+    {'pickNumber': 26, 'team': 'DAL', 'result': {}},
+    {'pickNumber': 27, 'team': 'BUF', 'result': {}},
+    {'pickNumber': 28, 'team': 'CIN', 'result': {}},
+    {'pickNumber': 29, 'team': 'NO', 'result': {}},
+    {'pickNumber': 30, 'team': 'PHI', 'result': {}},
+    {'pickNumber': 31, 'team': 'KC', 'result': {}}
   ],
   results: {
     1: null,
@@ -327,8 +329,8 @@ setCurrentTeam()
           </button>
           <div class="text-center font-bold py-8 flex-1">
             <h2 class="text-5xl">Pick {{ state.currentPick + ': ' + state.currentTeam.name }}</h2>
-            <h5 class="text-sm opacity-70" v-if="state.results[state.currentPick]">current pick:
-              {{ state.results[state.currentPick].name }}</h5>
+            <h5 class="text-sm opacity-70" v-if="state.currentPick">selected player:
+              {{ state.picks.filter(pick => pick.pickNumber === state.currentPick)[0].result.name }}</h5>
           </div>
           <button @click="move('right')" class="w-12 flex items-center opacity-50 cursor-pointer" :class="{
                       'opacity-0 cursor-default':  state.currentPick === state.picks.length
@@ -341,12 +343,12 @@ setCurrentTeam()
         </div>
       </div>
     </header>
-    <div class="flex-1 flex flex-col max-w-4xl mx-auto w-full">
+    <div class="flex-1 flex flex-col max-w-7xl mx-auto w-full h-full">
       <div class="flex justify-end py-4 text-sky-900 px-12 lg:px-0" v-if="!state.showResults">
         <button class="hover:underline" @click="toggleResults()">View Results</button>
       </div>
       <div class="flex items-center h-full gap-12">
-        <div v-if="state.showTradeOption || state.showPickOption" class="flex flex-col flex-1 h-full">
+        <div v-if="state.showTradeOption || state.showPickOption" class="flex flex-col lg:w-1/3 h-full">
           <div v-if="state.showPickOption" class="flex-1 flex flex-col items-center justify-center">
             <div class="w-full">
               <div class="pb-8 lg:px-0 px-12">
@@ -444,19 +446,35 @@ setCurrentTeam()
             </div>
           </div>
         </div>
-        <div v-if="state.showResults" class="flex-1 flex flex-col h-full px-12 lg:px-0">
+        <div v-if="state.showResults" class="flex-1 flex flex-col h-full overflow-y-auto px-12 lg:px-0">
           <div class="flex justify-end py-4 text-sky-900 lg:px-0">
             <button v-if="!state.showPickOption" class="hover:underline" @click="toggleResults">Back to the Draft
             </button>
           </div>
-          <div class="flex flex-col flex-1 text-lg">
-            <div>
-              <div v-for="(result, index) in state.picks" class="grid grid-cols-8">
-                <div class="w-8 col-span-1">{{ index+1 }}</div>
-                <div v-if="state.picks[index]" class="col-span-2">{{ state.picks[index].team }}</div>
-                <div v-if="result" class="col-span-1">{{ result.position }}</div>
-                <div v-if="result" class="col-span-4">
+          <div class="flex flex flex-1 text-lg">
+            <div class="pr-4">
+              <div v-for="(result, index) in state.picks.slice(0,16)" class="grid grid-cols-12">
+                <div class="w-8 col-span-1 py-1">{{ index+1 }}</div>
+                <div v-if="state.picks[index]" class="col-span-2 py-1">{{ state.picks[index].team }}</div>
+                <div v-if="result" class="col-span-2 py-1">{{ result.result.position }}</div>
+                <div v-if="result" class="col-span-5 py-1">
                   {{ result.result.name }}
+                </div>
+                <div v-if="result" class="col-span-2 py-1">
+                {{ result.result.school}}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div v-for="pick in state.picks.slice(16,31)" class="grid grid-cols-12">
+                <div class="w-8 col-span-1 py-1">{{ pick.pickNumber }}</div>
+                <div class="col-span-2 py-1">{{ pick.team }}</div>
+                <div v-if="result" class="col-span-2 py-1">{{ result.result.position }}</div>
+                <div v-if="result" class="col-span-5 py-1">
+                  {{ result.result.name }}
+                </div>
+                <div v-if="result" class="col-span-2 py-1">
+                  {{ result.result.school}}
                 </div>
               </div>
             </div>
