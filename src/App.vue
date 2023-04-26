@@ -4,6 +4,7 @@ import {reactive} from 'vue'
 function moveToPick(pickNumber) {
   state.currentPick = pickNumber
   setCurrentTeam()
+  state.showResults = false
   reset()
 }
 
@@ -549,14 +550,14 @@ setCurrentTeam()
                 <div class="w-8 py-1 cursor-pointer font-semibold text-sky-200 hover:bg-sky-900 text-center rounded mr-1"
                      @click="moveToPick(pick.pickNumber)">{{ pick.pickNumber }}
                 </div>
-                <div class="py-1 text-white flex"><span class="py-1 text-center w-16 rounded px-1"
+                <div class="py-1 text-white flex"><span class="py-1 text-center rounded w-12 px-1"
                                                                    :class="state.teams.filter(team => pick.team === team.name)[0].color">{{
                     pick.team
                   }}</span></div>
                 <div class="flex-1 px-1">
                   {{ pick.result ? pick.result.name : '' }}
                 </div>
-                <div class="col-span-2 px-1">
+                <div class="px-1">
                   {{ pick.result ? pick.result.position : ''}}
                 </div>
                 <div v-if="pick.result" class="col-span-2 px-1">
