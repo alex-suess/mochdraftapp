@@ -65,6 +65,10 @@ function displayPlayerOptions() {
   if (state.positionFilters.length) {
     state.filteredPlayerOptions = state.filteredPlayerOptions.filter(player => state.positionFilters.includes(player.position))
   }
+
+  if (state.positionFilters.length === 10) {
+    state.positionFilters = []
+  }
 }
 
 function displayTradeTeamOptions() {
@@ -350,50 +354,58 @@ setCurrentTeam()
 </script>
 
 <template>
-  <div class="h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col bg-sky-950 text-white">
     <header>
       <div class="" :class="state.currentTeam.color">
-        <div class="flex text-white max-w-4xl mx-auto px-12 lg:px-0">
-          <button @click="move('left')" class="w-12 flex items-center opacity-50 cursor-pointer" :class="{
+        <div class="bg-gradient-to-b from-transparent to-sky-950">
+          <div class="flex text-white max-w-4xl mx-auto px-12 lg:px-0">
+            <button @click="move('left')" class="w-12 flex items-center opacity-50 cursor-pointer" :class="{
                       'opacity-0 cursor-default':  state.currentPick === 1
                   }">
-            <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-                 xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-          </button>
-          <div class="text-center font-bold py-8 flex-1">
-            <h2 class="text-4xl">Pick {{ state.currentPick + ': ' + state.currentTeam.name }}</h2>
-            <h5 class="text-sm opacity-70" v-if="state.currentPick">selected player:
-              {{ state.picks.filter(pick => pick.pickNumber === state.currentPick)[0].result.name }}</h5>
-          </div>
-          <button @click="move('right')" class="w-12 flex items-center opacity-50 cursor-pointer" :class="{
+              <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+            <div class="text-center font-bold py-8 flex-1">
+              <h2 class="text-4xl">Pick {{ state.currentPick + ': ' + state.currentTeam.name }}</h2>
+              <h5 class="text-sm opacity-70" v-if="state.currentPick">selected player:
+                {{ state.picks.filter(pick => pick.pickNumber === state.currentPick)[0].result.name }}</h5>
+            </div>
+            <button @click="move('right')" class="w-12 flex items-center opacity-50 cursor-pointer" :class="{
                       'opacity-0 cursor-default':  state.currentPick === state.picks.length
                   }">
-            <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-                 xmlns="http://www.w3.org/2000/svg">
-              <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-li nejoin="round"></path>
-            </svg>
-          </button>
+              <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-li nejoin="round"></path>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </header>
     <div class="max-w-7xl w-full mx-auto">
-      <div class="flex justify-between py-4 items-center text-sky-900 px-12 lg:px-0" v-if="!state.showResults && state.mobile">
+      <div class="flex justify-between py-4 items-center text-white font-semibold px-12 lg:px-0"
+           v-if="!state.showResults && state.mobile">
         <div>
-          <button v-if="!state.showTradeOption || !state.showPickOption" class="text-sky-900 flex items-center lg:text-lg" @click="reset">
-            <svg class="h-6 w-6 mr-2" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          <button v-if="!state.showTradeOption || !state.showPickOption"
+                  class="flex items-center text-xl opacity-90 hover:bg-sky-800 py-2 px-4 rounded" @click="reset">
+            <svg class="mr-2 w-6 h-6" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
             <span>Back</span>
           </button>
         </div>
         <div>
-          <button class="hover:underline flex items-center" @click="toggleResults()">
-            Results
-            <svg class="h-6 w-6 ml-2" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+          <button v-if="state.showPickOption && state.showTradeOption " class="flex items-center text-xl opacity-90 hover:bg-sky-800 py-2 px-4 rounded"
+                  @click="toggleResults()">
+            <svg class="h-6 w-6 mr-2" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"
+                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
+            Results
           </button>
         </div>
       </div>
@@ -403,27 +415,38 @@ setCurrentTeam()
             <div class="w-full">
               <div class="lg:px-0 px-12">
                 <input type="text"
-                       class="cursor-pointer shadow-lg w-full bg-sky-50 border-2 border-sky-800 rounded-xl py-8 px-6 text-xl placeholder:text-sky-800 placeholder:tracking-wider placeholder:font-semibold placeholder:text-center"
+                       class="text-sky-900 bg-opacity-90 cursor-pointer shadow-lg w-full bg-sky-50 border-2 border-sky-800 rounded-lg py-8 px-6 text-xl placeholder:text-sky-800 placeholder:tracking-wider placeholder:font-semibold placeholder:text-center"
                        placeholder="SELECT A PLAYER" v-model="state.playerInput"
                        @input="displayPlayerOptions"
                        @click="displayPlayerOptions">
-                <div v-if="state.filteredPlayerOptions.length" class="py-4">
-                  <button @click="state.showFilterOptions = !state.showFilterOptions" class="w-full text-gray-400 tracking-wider pb-8 pt-4 px-8 text-center text-lg uppercase font-semibold">Filters</button>
-                  <div v-if="state.showFilterOptions" class="grid lg:grid-cols-10 grid-cols-5 gap-2">
+                <div v-if="state.filteredPlayerOptions.length" class="my-8 bg-sky-300 bg-opacity-50 rounded">
+                  <button @click="state.showFilterOptions = !state.showFilterOptions"
+                          class="w-full tracking-wider py-4 px-8 flex items-center justify-center text-white text-lg uppercase font-semibold">
+                    <svg class="h-8 w-8 mr-2" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"
+                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                          d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"
+                          stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    Filters
+                  </button>
+                  <div v-if="state.showFilterOptions"
+                       class="grid lg:grid-cols-10 grid-cols-5 gap-2 p-2 mb-4 rounded-lg">
                     <div v-for="position in ['QB', 'RB', 'WR', 'TE', 'OT', 'IOL', 'EDGE', 'CB', 'S', 'DL']"
-                         class="rounded py-2 text-center font-semibold text-sm mb-4 text-white cursor-pointer" :class="[{
+                         class="rounded shadow py-2 text-center font-semibold text-sm text-white cursor-pointer"
+                         :class="[{
                           'bg-opacity-25': !state.positionFilters.includes(position) && state.positionFilters.length,
-                          'bg-opacity-100': state.positionFilters.includes(position) || !state.positionFilters.length,
+                          'bg-opacity-70': state.positionFilters.includes(position) || !state.positionFilters.length,
                   }, positionColors[position]]"
                          @click="togglePositionFilter(position)">{{ position }}
                     </div>
                   </div>
                 </div>
               </div>
-              <div v-if="state.filteredPlayerOptions.length" class="pb-8 player-select px-12 lg:px-0">
+              <div v-if="state.filteredPlayerOptions.length" class="player-select rounded-lg mx-12 lg:px-0 bg-sky-900">
                 <div v-for="player in state.filteredPlayerOptions"
-                     class="hover:bg-sky-100 cursor-pointer flex items-center py-2 rounded-lg">
-                <span class="py-2 w-16 rounded-lg text-center text-sm font-bold text-white" :class="{
+                     class="hover:bg-sky-100 hover:text-sky-700 font-semibold cursor-pointer flex items-center px-2 rounded-lg">
+                <span class="py-2 w-16 rounded text-center text-sm font-bold text-white" :class="{
                   'bg-red-400': player.position=='QB',
                   'bg-blue-400': player.position=='RB',
                   'bg-yellow-400': player.position == 'TE',
@@ -439,7 +462,7 @@ setCurrentTeam()
                 }">
                   {{ player.position }}
                 </span>
-                  <div class="px-4 py-2 w-full flex items-center justify-between gap-4" @click="submitPick(player.id)">
+                  <div class="px-4 py-4 w-full flex items-center justify-between gap-4" @click="submitPick(player.id)">
                     <span>{{ player.name }}</span>
                     <span class="text-gray-400 uppercase text-sm">{{ player.school }}</span>
                   </div>
@@ -456,7 +479,7 @@ setCurrentTeam()
             <div class="w-full">
               <div class=" lg:px-0 px-12">
                 <input v-if="!state.tradeTeam" placeholder="TRADE THIS PICK"
-                       class="w-full border-2 border-orange-800 rounded-xl shadow-inner py-8 px-6 text-xl placeholder:text-orange-800 placeholder:tracking-wider placeholder:font-semibold placeholder:text-center"
+                       class="w-full border-2 border-orange-800 rounded-lg shadow-inner py-8 px-6 text-xl placeholder:text-orange-800 placeholder:tracking-wider placeholder:font-semibold placeholder:text-center"
                        @click='displayTradeTeamOptions' @input="displayTradeTeamOptions" type="text"
                        v-model="state.tradeTeamInput">
               </div>
@@ -468,33 +491,43 @@ setCurrentTeam()
               <div v-if="state.showTradeOption && !state.showPickOption">
                 <div class="mt-8">
                   <div v-if="state.filteredTradeTeamOptions.length && !state.tradeTeam">
-                    <div class="px-8">
-                      <div class="text-gray-400 tracking-wider pb-8 px-8 text-center text-lg uppercase font-semibold">1. Select a team to trade with</div>
-                      <div class="hover:bg-sky-100 cursor-pointer px-4 text-xl justify-between flex items-center py-4 odd:bg-gray-100"
-                           @click="state.tradeTeam = team.name"
-                           v-for="team in state.filteredTradeTeamOptions">
-                        <span class="w-12 rounded text-white text-center font-semibold" :class="team.color">{{ team.name }}</span><span class="ml-4 text-gray-400">Picks {{
-                          state.picks.map(pick => pick.team === team.name ? '#' + pick.pickNumber : '').join(' ')
-                        }}</span>
+                    <div class="text-gray-400 tracking-wider pb-8 px-8 text-center text-lg uppercase font-semibold">1.
+                      Select a team to trade with
+                    </div>
+                    <div class="flex flex-col rounded-lg  mx-12 rounded-lg h-full bg-sky-900">
+                      <div class="h-full max-h-96 overflow-y-auto">
+                        <div class="rounded-lg hover:bg-sky-100 cursor-pointer px-4 text-xl justify-between flex items-center py-4"
+                             @click="state.tradeTeam = team.name"
+                             v-for="team in state.filteredTradeTeamOptions">
+                          <span class="w-12 rounded text-white text-center font-semibold"
+                                :class="team.color">{{ team.name }}</span><span class="ml-4 text-gray-400">Picks {{
+                            state.picks.map(pick => pick.team === team.name ? '#' + pick.pickNumber : '').join(' ')
+                          }}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="" v-if="state.tradeTeam">
-                  <div class="text-gray-400 tracking-wider pb-8 px-8 text-center text-lg uppercase font-semibold">2. Select the picks the team gives in return</div>
+                  <div class="text-gray-400 tracking-wider pb-8 px-8 text-center text-lg uppercase font-semibold">2.
+                    Select the picks the team gives in return
+                  </div>
                   <div class="flex gap-4 items-center px-8">
                     <button @click="toggleTradePick(pick.pickNumber)"
-                            class="py-4 mt-2 rounded-lg w-32 shadow-lg hover:bg-opacity-100 text-white font-semibold" :class="[{
+                            class="py-4 mt-2 rounded-lg w-32 shadow-lg hover:bg-opacity-100 text-white font-semibold"
+                            :class="[{
                               'bg-opacity-50': !state.tradePicks.includes(pick.pickNumber),
                           'bg-opacity-100': state.tradePicks.includes(pick.pickNumber)
-                        }, state.teams.filter(team => team.name === state.tradeTeam)[0].color]" v-for="pick in state.picks.filter(pick => pick.team === state.tradeTeam)">
+                        }, state.teams.filter(team => team.name === state.tradeTeam)[0].color]"
+                            v-for="pick in state.picks.filter(pick => pick.team === state.tradeTeam)">
                       Pick #{{ pick.pickNumber }}
                     </button>
                   </div>
                 </div>
                 <div class="mt-12 flex justify-center" v-if="state.tradeTeam">
                   <button @click="tradePicks()"
-                          class="py-4 bg-sky-800 text-white mt-2 rounded-lg w-32 hover:bg-sky-700 shadow-lg">Execute Trade
+                          class="py-4 bg-sky-800 text-white mt-2 rounded-lg w-32 hover:bg-sky-700 shadow-lg">Execute
+                    Trade
                   </button>
                 </div>
               </div>
@@ -502,27 +535,32 @@ setCurrentTeam()
           </div>
         </div>
         <div v-if="state.showResults || !state.mobile" class="overflow-scroll max-h-min px-12 lg:px-0">
-          <div class="flex justify-end py-4 text-sky-900 lg:px-0">
-            <button v-if="state.mobile" class="hover:underline" @click="toggleResults">Back to the Draft
+          <div class="flex py-4 text-sky-900 lg:px-0 text-white font-semibold">
+            <button v-if="state.mobile" class="flex items-center text-xl opacity-90 hover:bg-sky-800 py-2 px-4 rounded" @click="toggleResults">
+              <svg class="mr-2 w-6 h-6" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Back
             </button>
           </div>
           <div class="lg:flex flex-1 lg:text-lg">
             <div class="lg:pr-4">
-              <div v-for="pick in state.picks" class="grid grid-cols-12">
-                <div class="w-8 col-span-1 py-1 cursor-pointer font-semibold text-sky-700"
+              <div v-for="pick in state.picks" class="flex items-center justify-between">
+                <div class="w-8 py-1 cursor-pointer font-semibold text-sky-200 hover:bg-sky-900 text-center rounded mr-1"
                      @click="moveToPick(pick.pickNumber)">{{ pick.pickNumber }}
                 </div>
-                <div class="col-span-2 py-1 text-white flex"><span class=" text-center w-16 rounded py-1"
+                <div class="py-1 text-white flex"><span class="py-1 text-center w-16 rounded px-1"
                                                                    :class="state.teams.filter(team => pick.team === team.name)[0].color">{{
                     pick.team
                   }}</span></div>
-                <div v-if="pick" class="col-span-5 py-1">
-                  {{ pick.result.name }}
+                <div class="flex-1 px-1">
+                  {{ pick.result ? pick.result.name : '' }}
                 </div>
-                <div v-if="pick" class="col-span-2 py-1">{{ pick.result.position }}</div>
-
-                <div v-if="pick.result" class="col-span-2 py-1">
-                  {{ pick.result.school }}
+                <div class="col-span-2 px-1">
+                  {{ pick.result ? pick.result.position : ''}}
+                </div>
+                <div v-if="pick.result" class="col-span-2 px-1">
+                  {{ pick.result ? pick.result.school : '' }}
                 </div>
               </div>
             </div>
